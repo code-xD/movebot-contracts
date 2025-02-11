@@ -21,6 +21,11 @@ module core::permissions {
         create_resource_signer(admin, @publisher)
     }
 
+    #[test_only]
+    public fun setup_for_test(resource_account: &signer) {
+        init_module(resource_account);
+    }
+
     public fun create_resource_signer(
         resource_account: &signer, admin_addr: address
     ) {
