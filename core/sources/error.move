@@ -32,7 +32,7 @@ module core::error {
     }
 
     public fun invalid_user_address(): u64 {
-        error::invalid_argument(E_INVALID_USER_ADDRESS)
+        error::not_found(E_INVALID_USER_ADDRESS)
     }
 
     public fun invalid_bound(): u64 {

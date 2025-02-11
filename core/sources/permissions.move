@@ -1,7 +1,9 @@
 // admin access control to users
 module core::permissions {
-    use aptos_framework::account::{Self, SignerCapability};
+    use aptos_framework::coin;
+    use aptos_framework::aptos_coin;
     use aptos_framework::resource_account;
+    use aptos_framework::account::{Self, SignerCapability};
 
     use std::signer;
 
@@ -39,6 +41,7 @@ module core::permissions {
             resource_account,
             Permission { signer_cap: resource_signer_cap, admin_addr: admin_addr }
         );
+        coin::register<aptos_coin::AptosCoin>(resource_account);
     }
 
     #[view]

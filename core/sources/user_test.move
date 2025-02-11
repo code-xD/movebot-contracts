@@ -5,7 +5,6 @@ module core::user_test {
 
     use core::user;
     use core::permissions_test;
-    
 
     #[test(resource_account = @core, admin = @publisher)]
     fun test_basic_flow(resource_account: &signer, admin: &signer) {

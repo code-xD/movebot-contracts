@@ -2,6 +2,7 @@ module core::wallet {
     use aptos_framework::coin;
     use aptos_framework::aptos_coin;
 
+    use std::signer;
     use std::string::{String};
 
     use core::user;
@@ -17,11 +18,13 @@ module core::wallet {
     }
 
     public entry fun fund_move_for_wallet_by_user_address(caller: &signer, user_address: address, amount: u64) {
+        let caller_address = signer::address_of(caller);
+
         if(!user::check_valid_user_address(user_address)) {
             abort error::invalid_user_address()
         };
 
-        if(!coin::is_balance_at_least<aptos_coin::AptosCoin>(user_address, amount)) {
+        if(!coin::is_balance_at_least<aptos_coin::AptosCoin>(caller_address, amount)) {
             abort error::insufficient_balance()
         };
 

@@ -35,7 +35,7 @@ module core::fee {
     public fun calculate_fee_of_percentage_with_bounds(commission: u64, amount: u64, lower_bound: Option<u64>, upper_bound: Option<u64>): u64 {
         if(option::is_some(&lower_bound) && option::is_some(&upper_bound)) {
             assert!(
-                option::get_with_default(&lower_bound, 0) > option::get_with_default(&upper_bound, 0),
+                option::get_with_default(&lower_bound, 0) <= option::get_with_default(&upper_bound, 0),
                 error::invalid_bound()
             );
         };
