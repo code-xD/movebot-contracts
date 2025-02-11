@@ -7,12 +7,23 @@ module core::user {
     use std::signer;
     use std::string::{String, bytes};
 
-    use core::permissions;
     use core::error;
+    use core::event;
+    use core::permissions;
+    
 
     struct UserAuth has key {
         signer_cap: account::SignerCapability,
         tuser_id: String
+    }
+
+    const USER_MODULE: vector<u8> = b"user";
+    const USER_REGISTERED_ACTION: vector<u8> = b"USER_REGISTERED";
+
+    #[event]
+    struct UserRegisteredEvent has drop, store {
+        tuser_id: String,
+        user_address: address
     }
 
     fun is_user_registered(admin: &signer, tuser_id: String): (address, bool) {
@@ -20,6 +31,33 @@ module core::user {
         let user_address = account::create_resource_address(&admin_address, *bytes(&tuser_id));
 
         (user_address, exists<UserAuth>(user_address))
+    }
+
+    inline fun get_user_auth(user_signer: &signer): &UserAuth acquires UserAuth {
+        borrow_global<UserAuth>(signer::address_of(user_signer))
+    }
+
+    #[test_only]
+    public fun is_user_registered_event_emitted(caller: &signer, tuser_id: String, user_address: address): bool {
+        event::has_core_event_emitted(caller, USER_MODULE, USER_REGISTERED_ACTION, UserRegisteredEvent {
+            tuser_id,
+            user_address,
+        })
+    }
+
+    #[test_only]
+    public fun is_workflow_event_emitted<T: drop + store>(caller: &signer, user_signer: &signer, tweet_id: String, 
+    scope: vector<u8>, action: vector<u8>, metadata: T): bool acquires UserAuth{
+        let user_auth = get_user_auth(user_signer);
+        event::has_workflow_event_emitted(
+            caller,
+            signer::address_of(user_signer),
+            user_auth.tuser_id,
+            tweet_id,
+            scope,
+            action,
+            metadata
+        )
     }
 
     #[view]
@@ -36,6 +74,20 @@ module core::user {
         };
 
         user_address
+    }
+
+    public fun emit_workflow_event<T: drop + store>(caller: &signer, user_signer: &signer, tweet_id: String, 
+    scope: vector<u8>, action: vector<u8>, metadata: T) acquires UserAuth {
+        let user_auth = get_user_auth(user_signer);
+        event::emit_worklow_event(
+            caller,
+            signer::address_of(user_signer),
+            user_auth.tuser_id,
+            tweet_id,
+            scope,
+            action,
+            metadata
+        );
     }
 
     public fun get_user_signer(caller: &signer, tuser_id: String): signer acquires UserAuth {
@@ -62,6 +114,11 @@ module core::user {
         });
 
         coin::register<aptos_coin::AptosCoin>(&user_signer);
+
+        event::emit_core_event(caller, USER_MODULE, USER_REGISTERED_ACTION, UserRegisteredEvent{
+            tuser_id,
+            user_address: signer::address_of(&user_signer),
+        });
     }
 
     // transfer_ownership (revoke bot ownership of SignerCap and transfer to new user)

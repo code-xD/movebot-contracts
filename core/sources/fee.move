@@ -11,10 +11,30 @@ module core::fee {
     use std::option::{Self, Option};
 
     use core::user;
+    use core::event;
     use core::error;
 
     const BASE_VALUE: u64 = 100000000;
     const MAX_U64: u64 = 0xFFFFFFFFFFFFFFFF;
+
+    const FEE_MODULE: vector<u8> = b"fee";
+
+    const FLAT_FEE_CHARGED_ACTION: vector<u8> = b"FLAT_FEE_CHARGED_ACTION";
+    const PERCENTAGE_FEE_CHARGED_ACTION: vector<u8> = b"PERCENTAGE_FEE_CHARGED_ACTION";
+
+    #[event]
+    struct FlatFeeArgs has drop, store {
+        fee: u64
+    }
+
+    #[event]
+    struct PercentageFeeArgs has drop, store {
+        fee: u64,
+        amount: u64,
+        commission: u64,
+        lower_bound: Option<u64>,
+        upper_bound: Option<u64>
+    }
 
     // transfer_fa_fee_to_bot
     // transfer_coin_fee_to_bot
@@ -48,13 +68,48 @@ module core::fee {
         fee
     }
 
+    #[test_only]
+    public fun is_flat_fee_charged_event_emitted(caller: &signer, fee: u64): bool {
+        event::has_core_event_emitted(
+            caller, FEE_MODULE, FLAT_FEE_CHARGED_ACTION, 
+            FlatFeeArgs{fee}
+        )
+    }
+
+    #[test_only]
+    public fun is_percentage_fee_charged_event_emitted(sender: &signer, commission: u64, amount: u64, fee: u64, lower_bound: Option<u64>, upper_bound: Option<u64>): bool {
+        event::has_core_event_emitted(sender, FEE_MODULE, PERCENTAGE_FEE_CHARGED_ACTION, 
+            PercentageFeeArgs{
+                fee,
+                amount,
+                commission,
+                lower_bound,
+                upper_bound
+            }
+        )
+    }
+
     public fun charge_move_fee_with_percentage(sender: &signer, commission: u64, amount: u64, lower_bound: Option<u64>, upper_bound: Option<u64>) {
         let fee = calculate_fee_of_percentage_with_bounds(commission, amount, lower_bound, upper_bound);
         transfer_move_fee_to_bot(sender, fee);
+
+        //emit event
+        event::emit_core_event(sender, FEE_MODULE, PERCENTAGE_FEE_CHARGED_ACTION, 
+            PercentageFeeArgs{
+                fee,
+                amount,
+                commission,
+                lower_bound,
+                upper_bound
+            }
+        );
     }
 
     public fun charge_move_flat_fee(sender: &signer, fee: u64) {
         transfer_move_fee_to_bot(sender, fee);
+
+        // emit event
+        event::emit_core_event(sender, FEE_MODULE, FLAT_FEE_CHARGED_ACTION, FlatFeeArgs{fee});
     }
 
 }

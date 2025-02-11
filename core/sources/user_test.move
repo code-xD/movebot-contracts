@@ -16,8 +16,9 @@ module core::user_test {
 
         let user_signer = &user::get_user_signer(admin, tuser_id);
         let user_address = user::get_user_address(tuser_id);
-        assert!(user_address == signer::address_of(user_signer), 2);
 
+        assert!(user::is_user_registered_event_emitted(admin, tuser_id, user_address), 1);
+        assert!(user_address == signer::address_of(user_signer), 2);
         assert!(user::check_valid_user_address(user_address), 3);
     }
 

@@ -24,11 +24,13 @@ module core::wallet_test {
         wallet::assert_wallet_has_sufficient_move_balance(tuser_id, 0);
 
         wallet::fund_move_for_wallet_by_twitter_user_id(aaron, tuser_id, 100);
+        wallet::is_wallet_topup_by_tuser_id_event_emitted(aaron, tuser_id, 100);
         wallet::assert_wallet_has_sufficient_move_balance(tuser_id, 100);
         assert!(coin::balance<aptos_coin::AptosCoin>(signer::address_of(user_signer)) == 100, 1);
         assert!(coin::balance<aptos_coin::AptosCoin>(signer::address_of(aaron)) == 900, 2);
 
         wallet::fund_move_for_wallet_by_user_address(aaron, signer::address_of(user_signer), 100);
+        wallet::is_wallet_topup_by_user_address_event_emitted(aaron, signer::address_of(user_signer), 100);
         wallet::assert_wallet_has_sufficient_move_balance(tuser_id, 200);
         assert!(coin::balance<aptos_coin::AptosCoin>(signer::address_of(user_signer)) == 200, 3);
         assert!(coin::balance<aptos_coin::AptosCoin>(signer::address_of(aaron)) == 800, 4);
