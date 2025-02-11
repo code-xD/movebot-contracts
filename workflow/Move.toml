@@ -10,8 +10,8 @@ publisher = "_"
 aptos_framework = "0x1"
 
 [dev-addresses]
-core = "0xFACE"
-workflow = "0xFACE1"
+core = "0xABCD"
+workflow = "0xFACE"
 publisher = "0xCAFE"
 
 [dependencies.AptosFramework]

@@ -9,7 +9,7 @@ module core::permissions_test {
     use std::signer;
     use std::vector;
 
-    fun setup_for_test(admin: &signer, resource_account: &signer) {
+    public fun setup_for_test(admin: &signer, resource_account: &signer) {
         aptos_coin::ensure_initialized_with_apt_fa_metadata_for_test();
         aptos_account::create_account(signer::address_of(admin));
         resource_account::create_resource_account(
