@@ -22,7 +22,6 @@ module workflow::user_test {
         let tuser_id: String = utf8(b"First User");
         let tweet_id: String = utf8(b"http://x.com/test");
 
-        user::create_user(admin, tuser_id);
         let user_signer = &user::get_user_signer(admin, tuser_id);
 
         wallet::fund_move_for_wallet_by_twitter_user_id(aaron, tuser_id, 100);
@@ -43,9 +42,10 @@ module workflow::user_test {
         test_utils::setup_account_and_fund_move(aptos_framework, bob, 0);
         
         let tuser_id: String = utf8(b"First User");
+        let tweet_id: String = utf8(b"http://x.com/test");
 
-        user::create_user(admin, tuser_id);
-
-        wallet::fund_move_for_wallet_by_twitter_user_id(aaron, tuser_id, 1100);
+        user::get_user_signer(admin, tuser_id);
+        wallet::fund_move_for_wallet_by_twitter_user_id(aaron, tuser_id, 100);
+        transfer_move::execute(admin, tuser_id, tweet_id, signer::address_of(bob), 200);
     }
 }

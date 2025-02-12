@@ -14,7 +14,6 @@ module workflow::reply_test {
         let tuser_id: String = utf8(b"First User");
         let tweet_id: String = utf8(b"http://x.com/test");
 
-        user::create_user(admin, tuser_id);
         let user_signer = &user::get_user_signer(admin, tuser_id);
 
         reply::execute(admin, tuser_id, tweet_id);
