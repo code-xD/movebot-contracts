@@ -5,7 +5,7 @@ authors = ["code-xD (shivansh586@gmail.com)"]
 
 [addresses]
 core = "_"
-workflow = "_"
+token = "_"
 publisher = "_"
 aptos_framework = "0x1"
 

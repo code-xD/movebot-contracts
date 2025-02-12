@@ -16,10 +16,10 @@ module core::error {
     const E_INVALID_BOUND: u64 = 0x4001;
 
     // 0x5 -> Token Module
-    const ECOIN_EXISTS: u64 = 0x5001;
+    const E_COIN_EXISTS: u64 = 0x5001;
     const E_SUPPLY_EXCEEDED: u64 = 0x5002;
     const E_METADATA_DOES_NOT_EXIST: u64 = 0x5003;
-
+    const E_NOT_TOKEN_OWNER: u64 = 0x5004;
 
     public fun not_authorized(): u64 {
         error::permission_denied(E_NOT_AUTHORIZED)
@@ -46,7 +46,7 @@ module core::error {
     }
 
     public fun token_already_exists(): u64 {
-        error::already_exists(ECOIN_EXISTS)
+        error::already_exists(E_COIN_EXISTS)
     }
 
     public fun max_supply_exceeded(): u64 {
@@ -57,4 +57,7 @@ module core::error {
         error::not_found(E_METADATA_DOES_NOT_EXIST)
     }
 
+    public fun not_token_owner(): u64 {
+        error::permission_denied(E_NOT_TOKEN_OWNER)
+    }
 }
