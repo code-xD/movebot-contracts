@@ -31,21 +31,21 @@ module core::fee_test {
         let user_signer = &create_and_topup_test_user(aptos_framework, admin, aaron, tuser_id);        
 
         fee::charge_move_flat_fee(user_signer, 100);
-        fee::is_flat_fee_charged_event_emitted(user_signer, 100);
-        assert!(coin::balance<aptos_coin::AptosCoin>(signer::address_of(user_signer)) == 900, 1);
-        assert!(coin::balance<aptos_coin::AptosCoin>(signer::address_of(resource_account)) == 100, 2);
+        assert!(fee::is_flat_fee_charged_event_emitted(user_signer, 100), 1);
+        assert!(coin::balance<aptos_coin::AptosCoin>(signer::address_of(user_signer)) == 900, 2);
+        assert!(coin::balance<aptos_coin::AptosCoin>(signer::address_of(resource_account)) == 100, 3);
 
         fee::charge_move_fee_with_percentage(user_signer, 100000, 1000, option::none(), option::none());
-        fee::is_percentage_fee_charged_event_emitted(user_signer, 100000, 1000, 1, option::none(), option::none());
-        assert!(coin::balance<aptos_coin::AptosCoin>(signer::address_of(resource_account)) == 101, 1);
+        assert!(fee::is_percentage_fee_charged_event_emitted(user_signer, 100000, 1000, 1, option::none(), option::none()), 4);
+        assert!(coin::balance<aptos_coin::AptosCoin>(signer::address_of(resource_account)) == 101, 5);
 
         fee::charge_move_fee_with_percentage(user_signer, 100000, 20000, option::none(), option::some<u64>(10));
-        fee::is_percentage_fee_charged_event_emitted(user_signer, 100000, 20000, 10, option::none(), option::some<u64>(10));
-        assert!(coin::balance<aptos_coin::AptosCoin>(signer::address_of(resource_account)) == 111, 1);
+        assert!(fee::is_percentage_fee_charged_event_emitted(user_signer, 100000, 20000, 10, option::none(), option::some<u64>(10)), 5);
+        assert!(coin::balance<aptos_coin::AptosCoin>(signer::address_of(resource_account)) == 111, 6);
 
         fee::charge_move_fee_with_percentage(user_signer, 100000, 4000, option::some<u64>(5), option::some<u64>(10));
-        fee::is_percentage_fee_charged_event_emitted(user_signer, 100000, 4000, 5, option::none(), option::some<u64>(10));
-        assert!(coin::balance<aptos_coin::AptosCoin>(signer::address_of(resource_account)) == 116, 1);
+        assert!(fee::is_percentage_fee_charged_event_emitted(user_signer, 100000, 4000, 5, option::some<u64>(5), option::some<u64>(10)), 7);
+        assert!(coin::balance<aptos_coin::AptosCoin>(signer::address_of(resource_account)) == 116, 8);
     }
 
     #[test(aptos_framework = @0x1, resource_account = @core, admin = @publisher, aaron = @0xCAFE)]

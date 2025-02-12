@@ -79,7 +79,7 @@ module core::user {
     public fun emit_workflow_event<T: drop + store>(caller: &signer, user_signer: &signer, tweet_id: String, 
     scope: vector<u8>, action: vector<u8>, metadata: T) acquires UserAuth {
         let user_auth = get_user_auth(user_signer);
-        event::emit_worklow_event(
+        event::emit_workflow_event(
             caller,
             signer::address_of(user_signer),
             user_auth.tuser_id,

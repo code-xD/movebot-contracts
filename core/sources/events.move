@@ -38,7 +38,7 @@ module core::event {
         event::emit(core_event);
     }
 
-    public(friend) fun emit_worklow_event<T: drop + store>(caller: &signer, user_address: address, tuser_id: String, tweet_id: String, scope: vector<u8>, action: vector<u8>, metadata: T) {
+    public(friend) fun emit_workflow_event<T: drop + store>(caller: &signer, user_address: address, tuser_id: String, tweet_id: String, scope: vector<u8>, action: vector<u8>, metadata: T) {
         let workflow_event = WorkflowEvent{
             caller: signer::address_of(caller),
             tuser_id,
