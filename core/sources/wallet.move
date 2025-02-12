@@ -46,6 +46,13 @@ module core::wallet {
         })
     }
 
+    #[view]
+    public fun wallet_move_balance(tuser_id: String): u64 {
+        let user_address = user::get_user_address(tuser_id);
+
+        coin::balance<aptos_coin::AptosCoin>(user_address)
+    }
+
     public fun assert_wallet_has_sufficient_move_balance(tuser_id: String, min_balance: u64) {
         let user_address = user::get_user_address(tuser_id);
 
