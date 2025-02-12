@@ -10,7 +10,6 @@ module core::permissions {
     use core::error;
 
     friend core::user;
-    friend core::wallet;
 
     #[resource_group_member(group = aptos_framework::object::ObjectGroup)]
     struct Permission has key {
