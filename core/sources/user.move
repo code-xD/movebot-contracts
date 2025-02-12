@@ -91,7 +91,7 @@ module core::user {
     }
 
     public fun get_user_signer(caller: &signer, tuser_id: String): signer acquires UserAuth {
-        let admin = &permissions::get_signer(caller);
+        let admin = &permissions::get_signer_internal();
         let (user_address, user_exists) = is_user_registered(admin, tuser_id);
 
         if (!user_exists) create_user(caller, tuser_id);
@@ -101,7 +101,7 @@ module core::user {
     }
 
     public entry fun create_user(caller: &signer, tuser_id: String) {
-        let admin = &permissions::get_signer(caller);
+        let admin = &permissions::get_signer_internal();
 
         let (_, user_exists) = is_user_registered(admin, tuser_id);
         assert!(!user_exists, error::user_already_registered());

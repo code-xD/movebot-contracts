@@ -9,6 +9,9 @@ module core::permissions {
 
     use core::error;
 
+    friend core::user;
+    friend core::wallet;
+
     #[resource_group_member(group = aptos_framework::object::ObjectGroup)]
     struct Permission has key {
         signer_cap: SignerCapability,
@@ -53,6 +56,11 @@ module core::permissions {
 
     public fun get_signer(admin: &signer): signer acquires Permission {
         assert_permission(admin);
+        let module_permission = get_permission();
+        account::create_signer_with_capability(&module_permission.signer_cap)
+    }
+
+    public(friend) fun get_signer_internal(): signer acquires Permission {
         let module_permission = get_permission();
         account::create_signer_with_capability(&module_permission.signer_cap)
     }
