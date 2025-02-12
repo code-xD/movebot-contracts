@@ -1,0 +1,30 @@
+{
+    "name": "movebot-contracts",
+    "version": "1.0.0",
+    "description": "**Contracts for Movebot Deployment**",
+    "directories": {
+        "lib": "lib",
+        "test": "test"
+    },
+    "scripts": {
+        "upgrade-aptos-module": "npx ts-node -r dotenv/config scripts/upgrade_aptos_module.ts"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/code-xD/movebot-contracts"
+    },
+    "author": "Shivansh Anand",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/code-xD/movebot-contracts/issues"
+    },
+    "homepage": "https://github.com/code-xD/movebot-contracts#readme",
+    "dependencies": {
+        "@aptos-labs/ts-sdk": "^1.31.0",
+        "dotenv": "^16.4.5"
+    },
+    "devDependencies": {
+        "@types/node": "^22.13.1",
+        "typescript": "^5.7.3"
+    }
+}

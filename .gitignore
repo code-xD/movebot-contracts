@@ -1,2 +1,10 @@
+# local cache and build repos
 .movement
 build/
+node_modules
+
+# package files
+package-lock.json
+
+# personal info
+.env
