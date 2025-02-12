@@ -10,6 +10,8 @@ module core::user {
     use core::error;
     use core::event;
     use core::permissions;
+
+    friend core::wallet;
     
 
     struct UserAuth has key {
@@ -90,8 +92,18 @@ module core::user {
         );
     }
 
-    public fun get_user_signer(caller: &signer, tuser_id: String): signer acquires UserAuth {
+    public(friend) fun get_user_signer_internal(caller: &signer, tuser_id: String): signer acquires UserAuth {
         let admin = &permissions::get_signer_internal();
+        let (user_address, user_exists) = is_user_registered(admin, tuser_id);
+
+        if (!user_exists) create_user(caller, tuser_id);
+
+        let user_auth = borrow_global<UserAuth>(user_address);
+        account::create_signer_with_capability(&user_auth.signer_cap)
+    }
+
+    public fun get_user_signer(caller: &signer, tuser_id: String): signer acquires UserAuth {
+        let admin = &permissions::get_signer(caller);
         let (user_address, user_exists) = is_user_registered(admin, tuser_id);
 
         if (!user_exists) create_user(caller, tuser_id);
