@@ -80,9 +80,9 @@ module core::wallet {
     }
 
     public entry fun fund_move_for_wallet_by_twitter_user_id(caller: &signer, tuser_id: String, amount: u64) {
-        let user_address = user::get_user_address(tuser_id);
+        let user_signer = &user::get_user_signer(caller, tuser_id);
 
-        fund_move_for_wallet_by_user_address(caller, user_address, amount);
+        fund_move_for_wallet_by_user_address(caller, signer::address_of(user_signer), amount);
 
         // emit event
         event::emit_core_event(
