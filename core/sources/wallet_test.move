@@ -4,11 +4,8 @@ module core::wallet_test {
     use aptos_framework::account;
     use aptos_framework::aptos_coin;
     use aptos_framework::primary_fungible_store;
-    use aptos_framework::object::{Self, Object};
-    use aptos_framework::fungible_asset::{Self, Metadata};
 
     use std::signer;
-    use std::option;
     use std::string::{utf8, bytes, String};
 
     use core::user;

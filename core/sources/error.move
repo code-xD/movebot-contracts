@@ -7,6 +7,7 @@ module core::error {
 
     // 0x2 -> Permission module
     const E_NOT_AUTHORIZED: u64 = 0x2001;
+    const E_ALREADY_INITALIZED: u64 = 0x2002;
 
     // 0x3 -> Wallet module
     const E_INSUFFICIENT_BALANCE: u64 = 0x3001;
@@ -20,9 +21,14 @@ module core::error {
     const E_SUPPLY_EXCEEDED: u64 = 0x5002;
     const E_METADATA_DOES_NOT_EXIST: u64 = 0x5003;
     const E_NOT_TOKEN_OWNER: u64 = 0x5004;
+    const E_NOT_VERIFIED_TOKEN_SYMBOL: u64 = 0x5005;
 
     public fun not_authorized(): u64 {
         error::permission_denied(E_NOT_AUTHORIZED)
+    }
+
+    public fun already_initialized(): u64 {
+        error::aborted(E_ALREADY_INITALIZED)
     }
 
     public fun user_not_registered(): u64 {
@@ -59,5 +65,9 @@ module core::error {
 
     public fun not_token_owner(): u64 {
         error::permission_denied(E_NOT_TOKEN_OWNER)
+    }
+
+    public fun not_verified_token_symbol(): u64 {
+        error::not_found(E_NOT_VERIFIED_TOKEN_SYMBOL)
     }
 }

@@ -47,4 +47,24 @@ module core::permissions_test {
         permissions::assert_permission(aaron);
     }
 
+    #[test(resource_account = @core, admin = @publisher)]
+    fun test_permission_initializable(
+        resource_account: &signer, admin: &signer
+    ) {
+        setup_for_test(admin, resource_account);
+
+        permissions::only_initializable(admin, b"test_function");
+    }
+
+    #[test(resource_account = @core, admin = @publisher)]
+    #[expected_failure(abort_code = 0x72002, location = core::permissions)]
+    fun test_permission_initializable_failed(
+        resource_account: &signer, admin: &signer
+    ) {
+        setup_for_test(admin, resource_account);
+
+        permissions::only_initializable(admin, b"test_function");
+        permissions::only_initializable(admin, b"test_function");
+    }
+
 }

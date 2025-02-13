@@ -1,6 +1,7 @@
 // admin access control to users
 module core::permissions {
     use aptos_framework::coin;
+    use aptos_framework::object;
     use aptos_framework::aptos_coin;
     use aptos_framework::resource_account;
     use aptos_framework::account::{Self, SignerCapability};
@@ -15,6 +16,12 @@ module core::permissions {
     struct Permission has key {
         signer_cap: SignerCapability,
         admin_addr: address
+    }
+
+    #[resource_group_member(group = aptos_framework::object::ObjectGroup)]
+    struct FunctionMeta has key {
+        function_hash: vector<u8>,
+        called_once: bool
     }
 
     inline fun get_permission(): &mut Permission acquires Permission {
@@ -77,6 +84,28 @@ module core::permissions {
             module_permission.admin_addr == caller_address,
             error::not_authorized()
         );
+    }
+
+    // To check a function is called by admin only once.
+    // Usually used to initialize new modules post upgrade.
+    public fun only_initializable(caller: &signer, function_hash: vector<u8>): signer acquires Permission {
+        let ra_signer = get_signer(caller);
+        let caller_address = signer::address_of(&ra_signer);
+        let object_address = object::create_object_address(&caller_address, function_hash);
+
+        let function_meta_exists = object::object_exists<FunctionMeta>(object_address);
+
+        // Checks if already intialized
+        assert!(!function_meta_exists, error::already_initialized());
+
+        let constructor_ref = object::create_named_object(&ra_signer, function_hash);
+        let object_signer = object::generate_signer(&constructor_ref);
+        move_to(&object_signer, FunctionMeta {
+            function_hash: function_hash,
+            called_once: true
+        });
+
+        ra_signer
     }
 
 }
