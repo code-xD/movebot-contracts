@@ -1,6 +1,9 @@
 module core::wallet {
     use aptos_framework::coin;
     use aptos_framework::aptos_coin;
+    use aptos_framework::object::{Object};
+    use aptos_framework::primary_fungible_store;
+    use aptos_framework::fungible_asset::{Self, Metadata};
 
     use std::signer;
     use std::string::{String};
@@ -46,11 +49,34 @@ module core::wallet {
         })
     }
 
+    #[view]
+    public fun wallet_move_balance(tuser_id: String): u64 {
+        let user_address = user::get_user_address(tuser_id);
+
+        coin::balance<aptos_coin::AptosCoin>(user_address)
+    }
+
+    #[view]
+    public fun wallet_fa_balance(tuser_id: String, token_metadata: Object<Metadata>): u64 {
+        let user_address = user::get_user_address(tuser_id);
+
+        primary_fungible_store::balance(user_address, token_metadata)
+    }
+
     public fun assert_wallet_has_sufficient_move_balance(tuser_id: String, min_balance: u64) {
         let user_address = user::get_user_address(tuser_id);
 
         assert!(
             coin::is_balance_at_least<aptos_coin::AptosCoin>(user_address, min_balance),
+            error::insufficient_balance()
+        );
+    }
+
+    public fun assert_wallet_has_sufficient_fa_balance(tuser_id: String, token_metadata: Object<Metadata>, min_balance: u64) {
+        let user_address = user::get_user_address(tuser_id);
+
+        assert!(
+            primary_fungible_store::is_balance_at_least(user_address, token_metadata, min_balance),
             error::insufficient_balance()
         );
     }
@@ -93,6 +119,26 @@ module core::wallet {
         });
     }
 
+    public entry fun fund_fa_for_wallet_by_user_address(caller: &signer, user_address: address, token_metadata: Object<Metadata>, amount: u64) {
+        let caller_address = signer::address_of(caller);
+
+        if(!user::check_valid_user_address(user_address)) {
+            abort error::invalid_user_address()
+        };
+
+        if(!primary_fungible_store::is_balance_at_least(caller_address, token_metadata, amount)) {
+            abort error::insufficient_balance()
+        };
+
+        primary_fungible_store::transfer(caller, token_metadata, user_address, amount);
+    }
+
     // Fund Fungible Asset
+    public entry fun fund_fa_for_wallet_by_twitter_user_id(caller: &signer, tuser_id: String, token_metadata: Object<Metadata>, amount: u64) {
+        let user_signer = &user::get_user_signer_internal(caller, tuser_id);
+        
+        fund_fa_for_wallet_by_user_address(caller, signer::address_of(user_signer), token_metadata, amount);
+    }
+
     // Fund Other Coins
 }
