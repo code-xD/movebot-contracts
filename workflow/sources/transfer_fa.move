@@ -2,7 +2,6 @@ module workflow::transfer_fa {
     use aptos_framework::object::{Object};
     use aptos_framework::fungible_asset::{Metadata};
 
-    use std::signer;
     use std::string::{String};
 
     use core::user;
