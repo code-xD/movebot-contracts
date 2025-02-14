@@ -16,12 +16,19 @@ module core::error {
     // 0x4 -> Fee Module
     const E_INVALID_BOUND: u64 = 0x4001;
 
-    // 0x5 -> Token Module
+    // 0x5 -> Token Package
     const E_COIN_EXISTS: u64 = 0x5001;
     const E_SUPPLY_EXCEEDED: u64 = 0x5002;
     const E_METADATA_DOES_NOT_EXIST: u64 = 0x5003;
     const E_NOT_TOKEN_OWNER: u64 = 0x5004;
     const E_NOT_VERIFIED_TOKEN_SYMBOL: u64 = 0x5005;
+
+    // 0x6 -> NFT Package
+    const E_NFT_LIMIT_EXHAUSTED: u64 = 0x6001;
+    const E_COLLECTION_NOT_FOUND: u64 = 0x6002;
+    const E_NFT_NOT_FOUND: u64 = 0x6003;
+    const E_NFT_NOT_TRANSFERRABLE: u64 = 0x6004;
+    const E_NOT_NFT_OWNER: u64 = 0x6005;
 
     public fun not_authorized(): u64 {
         error::permission_denied(E_NOT_AUTHORIZED)
@@ -69,5 +76,25 @@ module core::error {
 
     public fun not_verified_token_symbol(): u64 {
         error::not_found(E_NOT_VERIFIED_TOKEN_SYMBOL)
+    }
+
+    public fun nft_limit_exhausted(): u64 {
+        error::out_of_range(E_NFT_LIMIT_EXHAUSTED)
+    }
+
+    public fun collection_not_found(): u64 {
+        error::not_found(E_COLLECTION_NOT_FOUND)
+    }
+
+    public fun nft_not_found(): u64 {
+        error::not_found(E_NFT_NOT_FOUND)
+    }
+
+    public fun nft_not_transferrable(): u64 {
+        error::permission_denied(E_NFT_NOT_TRANSFERRABLE)
+    }
+
+    public fun nft_not_owner(): u64 {
+        error::permission_denied(E_NOT_NFT_OWNER)
     }
 }

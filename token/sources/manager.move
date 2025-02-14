@@ -37,10 +37,7 @@ module token::manager {
         icon_uri: String, 
         project_uri: String
     ): Object<Metadata> {
-        assert!(
-            user::check_valid_user_address(signer::address_of(sender)),
-            error::invalid_user_address()
-        );
+        user::assert_valid_user_signer(sender);
 
         let object_address = object::create_object_address(&signer::address_of(sender), *bytes(&symbol));
         let fa_exists = object::object_exists<Metadata>(object_address);
@@ -71,10 +68,7 @@ module token::manager {
     }
 
     public fun transfer_token_ownership(sender: &signer, token_metadata: Object<Metadata>, to: address) {
-        assert!(
-            user::check_valid_user_address(signer::address_of(sender)),
-            error::invalid_user_address()
-        );
+        user::assert_valid_user_signer(sender);
 
         assert!(
             object::is_owner(token_metadata, signer::address_of(sender)),
@@ -85,12 +79,9 @@ module token::manager {
     }
 
     public fun transfer_token(sender: &signer, token_metadata: Object<Metadata>, to: address, amount: u64) {
-        let sender_address = signer::address_of(sender);
+        user::assert_valid_user_signer(sender);
 
-        assert!(
-            user::check_valid_user_address(sender_address),
-            error::invalid_user_address()
-        );
+        let sender_address = signer::address_of(sender);
 
         if(!primary_fungible_store::is_balance_at_least(sender_address, token_metadata, amount)) {
             abort error::insufficient_balance()
