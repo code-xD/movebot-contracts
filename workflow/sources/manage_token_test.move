@@ -10,7 +10,6 @@ module workflow::manage_token_test {
     use core::permissions_test;
 
     use token::manager;
-    use token::manager_test;
 
     use workflow::manage_token;
 

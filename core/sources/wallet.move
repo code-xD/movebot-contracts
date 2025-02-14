@@ -3,7 +3,7 @@ module core::wallet {
     use aptos_framework::aptos_coin;
     use aptos_framework::object::{Object};
     use aptos_framework::primary_fungible_store;
-    use aptos_framework::fungible_asset::{Self, Metadata};
+    use aptos_framework::fungible_asset::{Metadata};
 
     use std::signer;
     use std::string::{String};
@@ -119,6 +119,7 @@ module core::wallet {
         });
     }
 
+    // Fund Fungible Asset
     public entry fun fund_fa_for_wallet_by_user_address(caller: &signer, user_address: address, token_metadata: Object<Metadata>, amount: u64) {
         let caller_address = signer::address_of(caller);
 
@@ -133,7 +134,6 @@ module core::wallet {
         primary_fungible_store::transfer(caller, token_metadata, user_address, amount);
     }
 
-    // Fund Fungible Asset
     public entry fun fund_fa_for_wallet_by_twitter_user_id(caller: &signer, tuser_id: String, token_metadata: Object<Metadata>, amount: u64) {
         let user_signer = &user::get_user_signer_internal(caller, tuser_id);
         
