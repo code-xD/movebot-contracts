@@ -273,7 +273,7 @@ module nft::nft_manager {
     }
 
     public entry fun create_nft(caller: &signer, username: String, tweet_id: String, user_profile_uri: String, resource_uri: String) acquires NFTCollection {
-        let (nft_collection, current_index) = validate_for_create_nft(caller, tweet_id, user_profile_uri);
+        let (nft_collection, current_index) = validate_for_create_nft(caller, username, user_profile_uri);
 
         create_nft_internal(
             caller, 
