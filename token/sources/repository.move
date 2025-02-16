@@ -1,7 +1,8 @@
 module token::repository {
     use std::signer;
     use std::string::{String};
-    use std::smart_table::{Self, SmartTable};
+    
+    use aptos_std::smart_table::{Self, SmartTable};
 
     use aptos_framework::object::{Object};
     use aptos_framework::fungible_asset::{Self, Metadata};

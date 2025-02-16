@@ -83,7 +83,7 @@ module core::wallet_test {
     }
 
     #[test(aptos_framework = @0x1, resource_account = @core, admin = @publisher, aaron = @0xCAFE)]
-    #[expected_failure(abort_code = 0x63002, location = core::wallet)]
+    #[expected_failure(abort_code = 0x63002, location = core::user)]
     fun test_user_not_registered_for_move(aptos_framework: &signer, resource_account: &signer, admin: &signer, aaron: &signer) {
         permissions_test::setup_for_test(admin, resource_account);
         test_utils::setup_account_and_fund_move(aptos_framework, aaron, 1000);
@@ -94,7 +94,7 @@ module core::wallet_test {
     }
 
     #[test(resource_account = @core, admin = @publisher, aaron = @0xCAFE)]
-    #[expected_failure(abort_code = 0x63002, location = core::wallet)]
+    #[expected_failure(abort_code = 0x63002, location = core::user)]
     fun test_user_not_registered_for_fa(resource_account: &signer, admin: &signer, aaron: &signer) {
         permissions_test::setup_for_test(admin, resource_account);
         let token_metadata = test_utils::create_and_mint_test_token(aaron, 1000);

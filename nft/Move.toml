@@ -1,21 +1,19 @@
 [package]
-name = "workflow"
+name = "nft"
 version = "1.0.0"
 authors = ["code-xD (shivansh586@gmail.com)"]
 
 [addresses]
-nft = "_"
 core = "_"
-token = "_"
-workflow = "_"
+nft = "_"
 publisher = "_"
+aptos_stdlib = "0x1"
 aptos_framework = "0x1"
+aptos_token_objects = "0x4"
 
 [dev-addresses]
-nft = "0x1003"
 core = "0xb00b2aef1ffae7256e4fdc345903a6102e7107d9b1ed96a451ad6c110347ce78"
-token = "0x1001"
-workflow = "0x1002"
+nft = "0x1001"
 publisher = "0x0a6f65c5389cb25206b0778b0411728663f1533da8a51f36d5b14db16b18dbc4"
 
 [dependencies.AptosFramework]
@@ -23,13 +21,12 @@ git = "https://github.com/aptos-labs/aptos-core.git"
 rev = "mainnet"
 subdir = "aptos-move/framework/aptos-framework"
 
+[dependencies.AptosTokenObjects]
+git = "https://github.com/aptos-labs/aptos-framework.git"
+rev = "mainnet"
+subdir = "aptos-token-objects"
+
 [dependencies.core]
 local = "../core"
-
-[dependencies.token]
-local = "../token"
-
-[dependencies.nft]
-local = "../nft"
 
 [dev-dependencies]

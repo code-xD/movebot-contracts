@@ -78,6 +78,20 @@ module core::user {
         user_address
     }
 
+    public fun assert_valid_user_address(user_address: address) {
+        assert!(
+            exists<UserAuth>(user_address), 
+            error::invalid_user_address()
+        )
+    }
+
+    public fun assert_valid_user_signer(user: &signer) {
+        assert!(
+            exists<UserAuth>(signer::address_of(user)), 
+            error::invalid_user_address()
+        )
+    }
+
     public fun emit_workflow_event<T: drop + store>(caller: &signer, user_signer: &signer, tweet_id: String, 
     scope: vector<u8>, action: vector<u8>, metadata: T) acquires UserAuth {
         let user_auth = get_user_auth(user_signer);

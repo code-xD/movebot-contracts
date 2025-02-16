@@ -84,9 +84,7 @@ module core::wallet {
     public entry fun fund_move_for_wallet_by_user_address(caller: &signer, user_address: address, amount: u64) {
         let caller_address = signer::address_of(caller);
 
-        if(!user::check_valid_user_address(user_address)) {
-            abort error::invalid_user_address()
-        };
+        user::assert_valid_user_address(user_address);
 
         if(!coin::is_balance_at_least<aptos_coin::AptosCoin>(caller_address, amount)) {
             abort error::insufficient_balance()
@@ -123,9 +121,7 @@ module core::wallet {
     public entry fun fund_fa_for_wallet_by_user_address(caller: &signer, user_address: address, token_metadata: Object<Metadata>, amount: u64) {
         let caller_address = signer::address_of(caller);
 
-        if(!user::check_valid_user_address(user_address)) {
-            abort error::invalid_user_address()
-        };
+        user::assert_valid_user_address(user_address);
 
         if(!primary_fungible_store::is_balance_at_least(caller_address, token_metadata, amount)) {
             abort error::insufficient_balance()

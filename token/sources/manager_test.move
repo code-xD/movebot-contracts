@@ -42,7 +42,7 @@ module token::manager_test {
     }
 
     #[test(core = @core, admin = @publisher, aaron = @0xCAFE)]
-    #[expected_failure(abort_code = 0x63002, location = token::manager)]
+    #[expected_failure(abort_code = 0x63002, location = core::user)]
     fun test_invalid_user_address_for_token_create(core: &signer, admin: &signer, aaron: &signer) {
         permissions_test::setup_for_test(admin, core);
 
@@ -71,7 +71,7 @@ module token::manager_test {
     }
 
     #[test(core = @core, admin = @publisher, aaron = @0xCAFE)]
-    #[expected_failure(abort_code = 0x63002, location = token::manager)]
+    #[expected_failure(abort_code = 0x63002, location = core::user)]
     fun test_invalid_user_address_for_token_ownership_transfer(core: &signer, admin: &signer, aaron: &signer) {
         permissions_test::setup_for_test(admin, core);
 
@@ -97,7 +97,7 @@ module token::manager_test {
     }
 
     #[test(core = @core, admin = @publisher, aaron = @0xCAFE)]
-    #[expected_failure(abort_code = 0x63002, location = token::manager)]
+    #[expected_failure(abort_code = 0x63002, location = core::user)]
     fun test_invalid_user_address_for_token_transfer(core: &signer, admin: &signer, aaron: &signer) {
         permissions_test::setup_for_test(admin, core);
 
